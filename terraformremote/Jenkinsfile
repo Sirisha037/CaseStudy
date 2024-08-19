@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/eshwar3240/code.git'
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: 'ap-south-1') {
+                    dir('./terraformremote') { 
+                        sh 'terraform init'
+                    }
+                }
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: 'ap-south-1') {
+                    dir('./terraformremote'){ 
+                        sh 'terraform apply -auto-approve'
+                    }
+                }
+            }
+        }
+    }
+}
