@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "eshwar0519/flask-app:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE = "sirisha707/flask-app:${env.BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials-id'  // Replace with your Docker Hub credentials ID
     }
 
@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from the Git repository
-                git branch: 'master', url: 'https://github.com/eshwar3240/code.git'
+                git branch: 'master', url: 'https://github.com/Sirisha037/CaseStudy.git'
             }
         }
 
