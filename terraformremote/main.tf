@@ -3,13 +3,13 @@ provider "aws" {
 }
 
 # Create an S3 bucket for kOps state store
-resource "aws_s3_bucket" "eshwar_kops_state_store" {
-  bucket = "eshwar-kops-state-store-unique"  # Change to a unique bucket name
+resource "aws_s3_bucket" "siri_kops_state_store" {
+  bucket = "siri-kops-state-store-unique"  # Change to a unique bucket name
 }
 
 resource "aws_key_pair" "example" {
-  key_name   = "eshwar1"  # Replace with your desired key name
-  public_key = file("/var/lib/jenkins/.ssh/eshwar1.pub")  # Replace with the path to your public key file
+  key_name   = "siri@87"  # Replace with your desired key name
+  public_key = file("/var/lib/jenkins/.ssh/Key_pair.pub")  # Replace with the path to your public key file
 }
 
 # Create an IAM role for EC2 with necessary permissions
@@ -43,11 +43,11 @@ resource "aws_iam_instance_profile" "kops_instance_profile" {
 }
 
 # Create a security group for the Kubernetes cluster
-resource "aws_security_group" "eshwar_k8s_sg" {
-  name        = "eshwar_k8s_security_group"
+resource "aws_security_group" "siri_k8s_sg" {
+  name        = "siri_k8s_security_group"
   description = "Allow inbound traffic for Kubernetes"
 
-  vpc_id = data.aws_vpc.eshwar_default.id  # Updated reference
+  vpc_id = data.aws_vpc.siri_default.id  # Updated reference
 
   ingress {
     from_port   = 22           # Allow SSH
@@ -85,25 +85,25 @@ resource "aws_security_group" "eshwar_k8s_sg" {
   }
 }
 
-data "aws_vpc" "eshwar_default" {
+data "aws_vpc" "siri_default" {
   default = true
 }
 
 # Create an EC2 instance with the IAM role attached
-resource "aws_instance" "eshwar_k8s_instance" {
+resource "aws_instance" "siri_k8s_instance" {
   ami                    = "ami-0a4408457f9a03be3"  # Change to a valid AMI ID for your region
   instance_type          = "t2.medium"               # Change to your desired instance type
   key_name               = aws_key_pair.example.key_name  # Change to your key pair name
   iam_instance_profile   = aws_iam_instance_profile.kops_instance_profile.name  # Attach the IAM instance profile
 
-  vpc_security_group_ids = [aws_security_group.eshwar_k8s_sg.id]
+  vpc_security_group_ids = [aws_security_group.siri_k8s_sg.id]
 
   tags = {
-    Name = "Eshwar-K8s-Instance"
+    Name = "siri-K8s-Instance"
   }
 }
 
-resource "null_resource" "eshwar_kops_cluster" {
+resource "null_resource" "siri_kops_cluster" {
   provisioner "file" {
     source      = "setup_kops.sh"  # Path to your local script
     destination = "/tmp/setup_kops.sh"  # Path on the remote instance
@@ -111,28 +111,28 @@ resource "null_resource" "eshwar_kops_cluster" {
     connection {
       type        = "ssh"
       user        = "ec2-user"  # Change this based on your AMI
-      private_key = file("/var/lib/jenkins/.ssh/eshwar1")  # Path to your private key
-      host        = aws_instance.eshwar_k8s_instance.public_ip  # Use the public IP of the instance
+      private_key = file("/var/lib/jenkins/.ssh/Key_pair")  # Path to your private key
+      host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/setup_kops.sh",  # Make the script executable
-      "/tmp/setup_kops.sh ${aws_s3_bucket.eshwar_kops_state_store.bucket}"  # Execute the script with the bucket name
+      "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
     ]
 
     connection {
       type        = "ssh"
       user        = "ec2-user"  # Change this based on your AMI
-      private_key = file("/var/lib/jenkins/.ssh/eshwar1")  # Path to your private key
-      host        = aws_instance.eshwar_k8s_instance.public_ip  # Use the public IP of the instance
+      private_key = file("/var/lib/jenkins/.ssh/Key_pair")  # Path to your private key
+      host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
 
   depends_on = [
-    aws_s3_bucket.eshwar_kops_state_store,
-    aws_security_group.eshwar_k8s_sg,
-    aws_instance.eshwar_k8s_instance
+    aws_s3_bucket.siri_kops_state_store,
+    aws_security_group.siri_k8s_sg,
+    aws_instance.siri_k8s_instance
   ]
 }
