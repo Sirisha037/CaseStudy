@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/eshwar3240/code.git'
+                git branch: 'master', url: 'https://github.com/Sirisha037/CaseStudy.git'
             }
         }
         stage('Terraform Init') {
