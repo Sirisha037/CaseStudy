@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "sirisha707/flask-app:${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS_ID = 'siri'  // Replace with your Docker Hub credentials ID
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials-id'  // Replace with your Docker Hub credentials ID
     }
 
     stages {
