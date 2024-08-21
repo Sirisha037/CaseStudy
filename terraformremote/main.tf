@@ -118,7 +118,7 @@ resource "null_resource" "siri_kops_cluster" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/setup_kops.sh",  # Make the script executable
+       # Make the script executable
       "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
     ]
 
