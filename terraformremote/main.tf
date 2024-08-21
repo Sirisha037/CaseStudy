@@ -119,12 +119,22 @@ resource "null_resource" "siri_kops_cluster" {
     }
   }
 
- provisioner "remote-exec" {
-    inline = [
-      "chmod +777 /tmp/setup_kops.sh",  # Make the script executable
-      "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
-    ]
+resource "null_resource" "siri_kops_cluster" {
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = " aws_instance.siri_k8s_instance.public_ip"
+      user        = "ec2-user"
+      private_key = file("~/.ssh/Key_pair")
+    }
 
+    environment = {
+      KOPS_CLUSTER_NAME = "cluster"
+    }
+
+    script = "/tmp/terraform_1507197390.sh"
+  }
+}
     connection {
       type        = "ssh"
       user        = "ec2-user"  # Change this based on your AMI
