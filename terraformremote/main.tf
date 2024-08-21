@@ -118,14 +118,12 @@ resource "null_resource" "siri_kops_cluster" {
       host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
-provisioner "remote-exec" {
-  inline = [
-    "chmod +x /tmp/setup_kops.sh",
-    "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
-  ]
-  timeout = "10m"  # Adjust as necessary
-}
- 
+
+ provisioner "remote-exec" {
+    inline = [
+      "chmod +777 /tmp/setup_kops.sh",  # Make the script executable
+      "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
+    ]
 
     connection {
       type        = "ssh"
