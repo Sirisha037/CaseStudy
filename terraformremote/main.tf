@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "siri_kops_state_store" {
 }
 
 resource "aws_key_pair" "example" {
-  key_name   = "siri@87"  # Replace with your desired key name
+  key_name   = "siri1"  # Replace with your desired key name
   public_key = file("/var/lib/jenkins/.ssh/Key_pair.pub")  # Replace with the path to your public key file
 }
 
@@ -99,7 +99,7 @@ resource "aws_instance" "siri_k8s_instance" {
   vpc_security_group_ids = [aws_security_group.siri_k8s_sg.id]
 
   tags = {
-    Name = "siri-K8s-Instance"
+    Name = "Siri-K8s-Instance"
   }
 }
 
