@@ -1,10 +1,8 @@
-terraform {  
-required_version = ">= 0.12"
-}
- 
+
 provider "aws" {
   region = "ap-south-1"  # Change to your desired region
 }
+
 # Create an S3 bucket for kOps state store
 resource "aws_s3_bucket" "siri_kops_state_store" {
   bucket = "siri-kops-state-store-unique"  # Change to a unique bucket name
@@ -119,12 +117,12 @@ resource "null_resource" "siri_kops_cluster" {
     }
   }
 
-provisioner "remote-exec" {
+  provisioner "remote-exec" {
     inline = [
-      "chmod +777 /tmp/setup_kops.sh",  # Make the script executable
+      "chmod +x /tmp/setup_kops.sh",  # Make the script executable
       "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
     ]
-}
+
     connection {
       type        = "ssh"
       user        = "ec2-user"  # Change this based on your AMI
