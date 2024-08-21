@@ -1,7 +1,10 @@
 provider "aws" {
   region = "ap-south-1"  # Change to your desired region
 }
-
+terraform {  
+required_version = ">= 0.12"
+}
+ 
 # Create an S3 bucket for kOps state store
 resource "aws_s3_bucket" "siri_kops_state_store" {
   bucket = "siri-kops-state-store-unique"  # Change to a unique bucket name
