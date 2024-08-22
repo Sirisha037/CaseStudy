@@ -108,7 +108,7 @@ resource "null_resource" "siri_kops_cluster" {
   provisioner "file" {
     source      = "setup_kops.sh"  # Path to your local script
     destination = "/tmp/setup_kops.sh"  # Path on the remote instance
-    permissions = "0755"
+   
 
     connection {
       type        = "ssh"
