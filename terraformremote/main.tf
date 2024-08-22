@@ -125,7 +125,10 @@ provisioner "remote-exec" {
     host        = aws_instance.siri_k8s_instance.public_ip
   }
  
-  script = "/tmp/setup_kops.sh"
+  inline = [
+    "chmod +x /tmp/setup_kops.sh",
+    "bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
+  ]
 }
   depends_on = [
     aws_s3_bucket.siri_kops_state_store,
