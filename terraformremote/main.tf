@@ -132,7 +132,6 @@ provisioner "remote-exec" {
 
   provisioner "remote-exec" {
     inline = [
-    set -o errexit
       "chmod +x /tmp/setup_kops.sh",  # Make the script executable
       "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
     ]
