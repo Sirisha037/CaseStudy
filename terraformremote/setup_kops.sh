@@ -18,5 +18,7 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 # Create the Kubernetes cluster
-kops create cluster --name siri.k8s.local --state="$KOPS_STATE_STORE" --zones ap-south-1a --node-count 2 --node-size t2.micro --control-plane-size t2.micro--dns-zone siri.k8s.local
+
+
+kops create cluster --name=siri.k8s.local --state=s3://siri-kops-state-store-unique --zones=ap-south-1a --node-count=2 --node-size=t2.micro --control-plane-size=t2.micro --dns-zone=siri.k8s.local
 
