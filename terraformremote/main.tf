@@ -123,13 +123,9 @@ provisioner "remote-exec" {
     user        = "ec2-user"
     private_key = file("/var/lib/jenkins/.ssh/Key_pair")
     host        = aws_instance.siri_k8s_instance.public_ip
-    script_path = "/tmp/my-temp-scripts/%RAND%.sh"
   }
  
-  inline = [
-    "chmod +x /tmp/setup_kops.sh",
-    "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
-  ]
+  command = "chmod +x /tmp/setup_kops.sh && bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
 }
 
   depends_on = [
