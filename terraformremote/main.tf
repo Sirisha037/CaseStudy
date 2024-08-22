@@ -108,6 +108,7 @@ resource "null_resource" "siri_kops_cluster" {
   provisioner "file" {
     source      = "setup_kops.sh"  # Path to your local script
     destination = "/tmp/setup_kops.sh"  # Path on the remote instance
+    permissions = "0755"
 
     connection {
       type        = "ssh"
@@ -124,10 +125,7 @@ provisioner "remote-exec" {
     host        = aws_instance.siri_k8s_instance.public_ip
   }
  
-  inline = [
-    "chmod +x /tmp/setup_kops.sh",
-    "bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
-  ]
+  script = "/tmp/setup_kops.sh"
 }
   depends_on = [
     aws_s3_bucket.siri_kops_state_store,
