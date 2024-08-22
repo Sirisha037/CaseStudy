@@ -116,7 +116,6 @@ resource "null_resource" "siri_kops_cluster" {
       host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
-
 provisioner "remote-exec" {
   connection {
     type        = "ssh"
@@ -125,9 +124,11 @@ provisioner "remote-exec" {
     host        = aws_instance.siri_k8s_instance.public_ip
   }
  
-  command = "chmod +x /tmp/setup_kops.sh && bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
+  inline = [
+    "chmod +x /tmp/setup_kops.sh",
+    "bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
+  ]
 }
-
   depends_on = [
     aws_s3_bucket.siri_kops_state_store,
     aws_security_group.siri_k8s_sg,
