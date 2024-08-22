@@ -117,19 +117,19 @@ resource "null_resource" "siri_kops_cluster" {
     }
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /tmp/setup_kops.sh",  # Make the script executable
-      "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "ec2-user"  # Change this based on your AMI
-      private_key = file("/var/lib/jenkins/.ssh/Key_pair")  # Path to your private key
-      host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
-    }
+provisioner "remote-exec" {
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"  # Change this based on your AMI
+    private_key = file("/var/lib/jenkins/.ssh/Key_pair")  # Path to your private key
+    host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
   }
+ 
+  script = <<EOF
+    chmod +x /tmp/setup_kops.sh
+    /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}
+EOF
+}
 
   depends_on = [
     aws_s3_bucket.siri_kops_state_store,
