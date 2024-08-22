@@ -115,6 +115,20 @@ resource "null_resource" "siri_kops_cluster" {
       host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
+provisioner "remote-exec" {
+  inline = [
+    "echo 'ClientAliveInterval 120' | sudo tee -a /etc/ssh/sshd_config",
+    "echo 'ClientAliveCountMax 720' | sudo tee -a /etc/ssh/sshd_config",
+    "sudo systemctl restart sshd"
+  ]
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("/var/lib/jenkins/.ssh/Key_pair")
+    host        = aws_instance.siri_k8s_instance.public_ip
+  }
+}
 
   provisioner "remote-exec" {
     inline = [
