@@ -1,4 +1,3 @@
-
 provider "aws" {
   region = "ap-south-1"  # Change to your desired region
 }
@@ -108,7 +107,6 @@ resource "null_resource" "siri_kops_cluster" {
   provisioner "file" {
     source      = "setup_kops.sh"  # Path to your local script
     destination = "/tmp/setup_kops.sh"  # Path on the remote instance
-   
 
     connection {
       type        = "ssh"
@@ -117,19 +115,21 @@ resource "null_resource" "siri_kops_cluster" {
       host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
     }
   }
-provisioner "remote-exec" {
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("/var/lib/jenkins/.ssh/Key_pair")
-    host        = aws_instance.siri_k8s_instance.public_ip
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/setup_kops.sh",  # Make the script executable
+      "/tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"  # Execute the script with the bucket name
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"  # Change this based on your AMI
+      private_key = file("/var/lib/jenkins/.ssh/Key_pair")  # Path to your private key
+      host        = aws_instance.siri_k8s_instance.public_ip  # Use the public IP of the instance
+    }
   }
- 
-  inline = [
-    "chmod +x /tmp/setup_kops.sh",
-    "bash /tmp/setup_kops.sh ${aws_s3_bucket.siri_kops_state_store.bucket}"
-  ]
-}
+
   depends_on = [
     aws_s3_bucket.siri_kops_state_store,
     aws_security_group.siri_k8s_sg,
