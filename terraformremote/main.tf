@@ -28,7 +28,7 @@ resource "aws_iam_role" "kops_ec2_role" {
         Sid    = ""
       }
     ]
-  }
+  })
 }
 
 # Attach the AdministratorAccess policy to the IAM role
