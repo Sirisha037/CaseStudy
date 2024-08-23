@@ -3,6 +3,7 @@ set -x  # Enable debugging
 
 KOPS_STATE_STORE="s3://siri-kops-state-store-unique"
 export KOPS_STATE_STORE="s3://siri-kops-state-store-unique"
+siri-k8-local
 
 # Update the package manager and install necessary packages
 sudo yum update -y
@@ -20,5 +21,5 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 # Create the Kubernetes cluster
 
 
-kops create cluster --name=siri.k8s.local --state=s3://siri-kops-state-store-unique --zones=ap-south-1a --node-count=2 --node-size=t2.micro --control-plane-size=t2.micro --dns-zone=siri.k8s.local
+kops create cluster --name=siri.k8s.local --state=s3://siri-kops-state-store-unique --zones=ap-south-1a --node-count=2 --node-size=t2.small --control-plane-size=t2.medium --dns-zone=siri.k8s.local
 
