@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: eshwar0519/flask-app  # Your Docker image
+        image:  sirisha707/flask-app:latest # Your Docker image
         ports:
         - containerPort: 5000  # Change this to the port your app listens on
